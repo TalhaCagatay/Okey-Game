@@ -7,11 +7,11 @@ namespace TÇI
     /// <summary>
     /// This class is responsible for shuffling stones
     /// </summary>
-    public static class ShuffleStones<T>
+    public static class ShuffleStones
     {
         // A Function to generate a 
         // random permutation of arr[] 
-        public static void Shuffle(T[] arr, int n)
+        public static void Shuffle<T>(T[] arr, int n)
         {
             // Creating a object 
             // for Random class 
@@ -33,9 +33,10 @@ namespace TÇI
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
+
             // Prints the random array 
-            for (int i = 0; i < n; i++)
-                Console.Write(arr[i] + " ");
+            //for (int i = 0; i < n; i++)
+            //    Console.Write(arr[i] + " ");
         }
     }
 }
