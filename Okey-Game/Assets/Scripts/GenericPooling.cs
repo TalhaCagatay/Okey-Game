@@ -16,6 +16,7 @@ public abstract class GenericPooling<T> : MonoBehaviour where T : Component
     {
         Instance = this;
 
+        //do any initialization before here
         if(PoolInitialized != null)
         {
             Debug.Log("Pool Initialized");
@@ -23,6 +24,7 @@ public abstract class GenericPooling<T> : MonoBehaviour where T : Component
         }
     }    
 
+    // use this to get object from pool
     public T Get()
     {
         if(objects.Count == 0)
