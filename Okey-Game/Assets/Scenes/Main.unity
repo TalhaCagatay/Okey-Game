@@ -229,7 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsAI: 1
   IsMyTurn: 0
-  stones: []
+  Tiles: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsAI: 1
   IsMyTurn: 0
-  stones: []
+  Tiles: []
 --- !u!1 &1683959722
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsAI: 1
   IsMyTurn: 0
-  stones: []
+  Tiles: []
 --- !u!1 &1704392879
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,4 +752,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsAI: 1
   IsMyTurn: 0
-  stones: []
+  Tiles: []
