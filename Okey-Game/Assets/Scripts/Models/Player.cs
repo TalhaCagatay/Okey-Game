@@ -14,11 +14,11 @@ namespace TÇI
         //////////////////////////////////////////////////////////////
 
         // this list holding player's hand
-        public List<TileModel> stones = new List<TileModel>();
+        public List<TileModel> Tiles = new List<TileModel>();
 
-        public void GiveStones(List<TileModel> Stones)
+        public void GiveStones(List<TileModel> tiles)
         {
-            stones.AddRange(Stones);
+            Tiles.AddRange(tiles);
         }
 
         //incase we want to use...(not used at the moment)
