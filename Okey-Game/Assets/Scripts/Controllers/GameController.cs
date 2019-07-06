@@ -49,37 +49,51 @@ namespace TÇI
             _players[3].GiveStones(TableController.Instance.GetNStone(14));
             Debug.Log("Tiles are dealt to all players");
 
+            LogPlayersHand();
+        }
+
+        private void LogPlayersHand()
+        {
             string hand = "";
-            for (int i = 0; i < _players[0].stones.Count; i++)
+            for (int i = 0; i < _players[0].Tiles.Count; i++)
             {
-                hand += _players[0].stones[i].Color + ", " + _players[0].stones[i].Number + " - ";
+                hand += _players[0].Tiles[i].Color + " " + _players[0].Tiles[i].Number + " - ";
             }
             Debug.LogWarning("Player1 Hand : " + hand);
 
             hand = "";
-            for (int i = 0; i < _players[1].stones.Count; i++)
+            for (int i = 0; i < _players[1].Tiles.Count; i++)
             {
-                hand += _players[1].stones[i].Color + ", " + _players[1].stones[i].Number + " - ";
+                hand += _players[1].Tiles[i].Color + " " + _players[1].Tiles[i].Number + " - ";
             }
             Debug.LogWarning("Player2 Hand : " + hand);
 
             hand = "";
-            for (int i = 0; i < _players[2].stones.Count; i++)
+            for (int i = 0; i < _players[2].Tiles.Count; i++)
             {
-                hand += _players[2].stones[i].Color + ", " + _players[2].stones[i].Number + " - ";
+                hand += _players[2].Tiles[i].Color + " " + _players[2].Tiles[i].Number + " - ";
             }
             Debug.LogWarning("Player3 Hand : " + hand);
 
             hand = "";
-            for (int i = 0; i < _players[3].stones.Count; i++)
+            for (int i = 0; i < _players[3].Tiles.Count; i++)
             {
-                hand += _players[3].stones[i].Color + ", " + _players[3].stones[i].Number + " - ";
+                hand += _players[3].Tiles[i].Color + " " + _players[3].Tiles[i].Number + " - ";
+            }
+            Debug.LogWarning("Player4 Hand : " + hand);
+
+            var sortedTiles = FindBestHand.CheckConsecutiveSeries(_players[3].Tiles);
+
+            hand = "";
+            for (int i = 0; i < sortedTiles.Count; i++)
+            {
+                hand += sortedTiles[i].Color + " " + sortedTiles[i].Number + " - ";
             }
             Debug.LogWarning("Player4 Hand : " + hand);
 
             //finding best hand and logging it
             List<TileModel> bestHand = new List<TileModel>();
-            bestHand = FindBestHand.GetBestHand();
+            bestHand = FindBestHand.GetBestHand(_players);
 
             hand = "";
             for (int i = 0; i < bestHand.Count; i++)
