@@ -12,7 +12,7 @@ namespace TÇI
         public static TableController Instance = null;
         public static event Action TableInitialized;
 
-        private static Stack<TileModel> _stones = new Stack<TileModel>(); // stones to be dealt to players
+        private static Stack<TileModel> _tiles = new Stack<TileModel>(); // stones to be dealt to players
 
         private void Awake()
         {
@@ -28,21 +28,21 @@ namespace TÇI
 
         private void SubscribeEvents()
         {
-            TileController.TilesInitialized += OnStonesInitialized;
+            TileController.TilesInitialized += OnTilesInitialized;
         }
 
         private void UnSubscribeEvents()
         {
-            TileController.TilesInitialized -= OnStonesInitialized;
+            TileController.TilesInitialized -= OnTilesInitialized;
         }
 
-        private void OnStonesInitialized()
+        private void OnTilesInitialized()
         {
             for (int i = 0; i < TileController.Instance.TileArray.Length; i++)
             {                
-                _stones.Push(TileController.Instance.TileArray[i]);
+                _tiles.Push(TileController.Instance.TileArray[i]);
             }
-            Debug.Log("Stones added to stack");
+            Debug.Log("Tiles added to stack");
 
             Debug.Log("Table Initialized");
             if (TableInitialized != null)
@@ -51,15 +51,15 @@ namespace TÇI
             }
         }
 
-        public List<TileModel> GetNStone(int N)
+        public List<TileModel> GetNTile(int N)
         {
-            List<TileModel> stoneList = new List<TileModel>();
+            List<TileModel> tileList = new List<TileModel>();
             for (int i = 0; i < N; i++)
             {
-                stoneList.Add(_stones.Pop());
+                tileList.Add(_tiles.Pop());
             }
 
-            return stoneList;
+            return tileList;
         }
     }
 }
