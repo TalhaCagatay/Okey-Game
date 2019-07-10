@@ -10,11 +10,20 @@ namespace TÇI
     /// What also needs to be done :
     /// 1-) Algorith should check every combination of sets with "runs" and "groups" in order to find which set is leaving out least amount of point
     /// 2-) Also a remainder that "2345" is almost twice better from "1234" because both 1 and 6 can help but for the second one only 5 will help    
+    /// 
+    /// What does the algorithm do :
+    /// 1-) Firstly it is ordering tiles by number and trying to find the "groups"
+    /// 2-) After finding groups it is ordering tiles by colors and numbers and trying to find "runs"
+
+    /// So, the algorithm is working correctly by not in an effective way but i will make it more efficient shortly...
+    /// I didn't add a check for joker yet
     /// </summary>
     public class FindBestHand
     {
         public static List<TileModel> GetBestHand(Player[] players)
         {
+            int score = 0;
+
             for (int i = 0; i < players.Length; i++)
             {
                 GetSets(players[i].Tiles);
@@ -55,7 +64,7 @@ namespace TÇI
                             meld.Add(sortedTileModel[x]);
                             break;
                         }
-                        else // if our meld's count is not < 3 then we dont have to broke that meld but start a new one and add them to allMelds list
+                        else // if our meld's count is >= 3 then we dont have to broke that meld but start a new one and add them to allMelds list
                         {
                             for (int i = 0; i < meld.Count; i++)
                             {
@@ -76,6 +85,11 @@ namespace TÇI
             }
             #endregion
 
+            // removing the groups from all tiles
+            for (int i = 0; i < meld.Count; i++)
+            {
+                allMelds.Remove(meld[i]);
+            }
             meld.Clear();
 
             #region Finding "RUNS"
