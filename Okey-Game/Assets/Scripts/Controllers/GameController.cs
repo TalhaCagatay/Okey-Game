@@ -42,17 +42,17 @@ namespace TÇI
         private void OnTableInitialized()
         {
             //15
-            _players[0].GiveStones(TableController.Instance.GetNStone(15));
+            _players[0].GiveStones(TableController.Instance.GetNTile(15));
             //14
-            _players[1].GiveStones(TableController.Instance.GetNStone(14));
-            _players[2].GiveStones(TableController.Instance.GetNStone(14));
-            _players[3].GiveStones(TableController.Instance.GetNStone(14));
+            _players[1].GiveStones(TableController.Instance.GetNTile(14));
+            _players[2].GiveStones(TableController.Instance.GetNTile(14));
+            _players[3].GiveStones(TableController.Instance.GetNTile(14));
             Debug.Log("Tiles are dealt to all players");
 
-            LogPlayersHand();
+            LogPlayersHands();
         }
 
-        private void LogPlayersHand()
+        private void LogPlayersHands()
         {
             string hand = "";
             for (int i = 0; i < _players[0].Tiles.Count; i++)
@@ -82,25 +82,16 @@ namespace TÇI
             }
             Debug.LogWarning("Player4 Hand : " + hand);
 
-            var sortedTiles = FindBestHand.CheckConsecutiveSeries(_players[3].Tiles);
+            ////finding best hand and logging it
+            //List<TileModel> bestHand = new List<TileModel>();
+            //bestHand = FindBestHand.GetBestHand(_players[3]);
 
-            hand = "";
-            for (int i = 0; i < sortedTiles.Count; i++)
-            {
-                hand += sortedTiles[i].Color + " " + sortedTiles[i].Number + " - ";
-            }
-            Debug.LogWarning("Player4 Hand : " + hand);
-
-            //finding best hand and logging it
-            List<TileModel> bestHand = new List<TileModel>();
-            bestHand = FindBestHand.GetBestHand(_players);
-
-            hand = "";
-            for (int i = 0; i < bestHand.Count; i++)
-            {
-                hand += bestHand[0].Color + ", " + bestHand[0].Number + " - ";
-            }
-            Debug.LogWarning("Best Hand : " + hand);
+            //hand = "";
+            //for (int i = 0; i < bestHand.Count; i++)
+            //{
+            //    hand += bestHand[i].Color + ", " + bestHand[i].Number + " - ";
+            //}
+            //Debug.LogWarning("Best Hand : " + hand);
         }
     }
 }
