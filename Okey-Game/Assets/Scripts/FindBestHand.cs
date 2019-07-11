@@ -39,18 +39,18 @@ namespace TÇI
         }
 
         public static int GetScore(List<TileModel> tileModels)
-        {
-            //we are ordering the player's hand with tiles numbers...1,2,3 etc
-            List<TileModel> sortedTileModel = tileModels.OrderBy(o => o.Number).ToList();
-
+        {           
             List<TileModel> meld = new List<TileModel>(); // creating an empty list to hold a meld
             List<TileModel> allMelds = new List<TileModel>();//([1,2,3],[5,6,7],[9,10,11]) this list is responsible of holding all melds
             //List<List<TileModel>> also an option or maybe a dictionary could be use but since the indexes doesnt matter dictionary will be pointless
 
-            var firstTile = sortedTileModel[0]; // getting the first tile
-            meld.Add(firstTile);//adding first in the meld list
+            //we are ordering the player's hand with tiles numbers...1,2,3 etc
+            List<TileModel> sortedTileModel = tileModels.OrderBy(o => o.Number).ToList();
 
             #region Finding "GROUPS"
+            var firstTile = sortedTileModel[0]; // getting the first tile
+            meld.Add(firstTile);//adding first tile in meld list
+
             for (int x = 1; x < sortedTileModel.Count; x++)
             {
                 for (int y = 0; y < meld.Count; y++)
