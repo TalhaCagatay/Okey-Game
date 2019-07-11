@@ -82,16 +82,38 @@ namespace TÇI
             }
             Debug.LogWarning("Player4 Hand : " + hand);
 
-            ////finding best hand and logging it
-            //List<TileModel> bestHand = new List<TileModel>();
-            //bestHand = FindBestHand.GetBestHand(_players[3]);
+            LogScoresAndBestPlayer(out hand);
+        }
 
-            //hand = "";
-            //for (int i = 0; i < bestHand.Count; i++)
-            //{
-            //    hand += bestHand[i].Color + ", " + bestHand[i].Number + " - ";
-            //}
-            //Debug.LogWarning("Best Hand : " + hand);
+        private void LogScoresAndBestPlayer(out string hand)
+        {
+            hand = "";
+            Debug.Log("Player1 score : " + FindBestHand.GetScore(_players[0].Tiles));
+            hand = "";
+            Debug.Log("Player2 score : " + FindBestHand.GetScore(_players[1].Tiles));
+            hand = "";
+            Debug.Log("Player3 score : " + FindBestHand.GetScore(_players[2].Tiles));
+            hand = "";
+            Debug.Log("Player4 score : " + FindBestHand.GetScore(_players[3].Tiles));
+
+            var bestPlayer = FindBestHand.GetBestHand(_players);
+
+            hand = "";
+            for (int i = 0; i < bestPlayer.Tiles.Count; i++)
+            {
+                hand += bestPlayer.Tiles[i].Color + " " + bestPlayer.Tiles[i].Number + " - ";
+            }
+
+            for (int i = 0; i < _players.Length; i++)
+            {
+                if (_players[i] == bestPlayer)
+                {
+                    Debug.Log("Player" + (i + 1) + " has the best hand with : " + hand);
+                    Debug.Log("Player" + (i + 1) + " has the best score with : " + FindBestHand.GetScore(_players[i].Tiles));
+
+                    return;
+                }
+            }
         }
     }
 }
