@@ -7,14 +7,15 @@ namespace TÇI
     /// <summary>
     /// this class is for checking series and groups in players hand and finding the best one
     /// I haven't got enough time to make this algorithm better but this will work.
+    /// 
+    /// /// What does the algorithm do :
+    /// 1-) Firstly it is ordering tiles by number and trying to find the "groups"
+    /// 2-) After finding groups it is ordering tiles by colors and numbers and trying to find "runs"
+    /// 
     /// What also needs to be done :
     /// 1-) Algorith should check every combination of sets with "runs" and "groups" in order to find which set is leaving out least amount of point
     /// 2-) Also a remainder that "2345" is almost twice better from "1234" because both 1 and 6 can help but for the second one only 5 will help    
     /// 
-    /// What does the algorithm do :
-    /// 1-) Firstly it is ordering tiles by number and trying to find the "groups"
-    /// 2-) After finding groups it is ordering tiles by colors and numbers and trying to find "runs"
-
     /// So, the algorithm is working correctly by not in an effective way but i will make it more efficient shortly...
     /// I didn't add a check for jokers yet
     /// </summary>
