@@ -16,33 +16,31 @@ namespace TÇI
     /// 2-) After finding groups it is ordering tiles by colors and numbers and trying to find "runs"
 
     /// So, the algorithm is working correctly by not in an effective way but i will make it more efficient shortly...
-    /// I didn't add a check for joker yet
+    /// I didn't add a check for jokers yet
     /// </summary>
     public class FindBestHand
     {
-        public static List<TileModel> GetBestHand(Player[] players)
+        public static Player GetBestHand(Player[] players)
         {
-            int score = 0;
+            int score = int.MaxValue;
+            Player bestPlayer = null;
 
             for (int i = 0; i < players.Length; i++)
             {
-                GetSets(players[i].Tiles);
+                if (GetScore(players[i].Tiles) < score)
+                {
+                    score = GetScore(players[i].Tiles);
+                    bestPlayer = players[i];
+                }
             }
 
-            return null; // this will return the player who has the best hand
+            return bestPlayer; // this will return the player who has the best hand
         }
 
-        public static List<TileModel> GetSets(List<TileModel> tileModels)
+        public static int GetScore(List<TileModel> tileModels)
         {
             //we are ordering the player's hand with tiles numbers...1,2,3 etc
             List<TileModel> sortedTileModel = tileModels.OrderBy(o => o.Number).ToList();
-
-            string hand = "";
-            for (int i = 0; i < sortedTileModel.Count; i++)
-            {
-                hand += sortedTileModel[i].Color + ", " + sortedTileModel[i].Number + " - ";
-            }
-            Debug.LogWarning("sorted Hand by Number: " + hand);
 
             List<TileModel> meld = new List<TileModel>(); // creating an empty list to hold a meld
             List<TileModel> allMelds = new List<TileModel>();//([1,2,3],[5,6,7],[9,10,11]) this list is responsible of holding all melds
@@ -94,14 +92,7 @@ namespace TÇI
 
             #region Finding "RUNS"
             //we are ordering the player's hand with tiles Colors and Numbers...Yellow0,Yellow1,Red0,Red1 etc
-            sortedTileModel = tileModels.OrderBy(o => o.Color).ThenBy(o => o.Number).ToList();
-
-            hand = "";
-            for (int i = 0; i < sortedTileModel.Count; i++)
-            {
-                hand += sortedTileModel[i].Color + ", " + sortedTileModel[i].Number + " - ";
-            }
-            Debug.LogWarning("sorted Hand by Color: " + hand);
+            sortedTileModel = tileModels.OrderBy(o => o.Color).ThenBy(o => o.Number).ToList();            
 
             firstTile = sortedTileModel[0]; // getting the first tile
             meld.Add(firstTile);//adding first in the meld list
@@ -145,28 +136,27 @@ namespace TÇI
             }
             #endregion
 
-            hand = "";
+            List<TileModel> tempTileList = new List<TileModel>(); // this is temporary and will be cleaned up later
+
+            for (int i = 0; i < tileModels.Count; i++)
+            {
+                tempTileList.Add(tileModels[i]);
+            }
+
+            //removing melds from initial hand
             for (int i = 0; i < allMelds.Count; i++)
             {
-                hand += allMelds[i].Color + ", " + allMelds[i].Number + " - ";
+                tempTileList.Remove(allMelds[i]);
             }
-            Debug.LogWarning("All Sets : " + hand);
 
-            return null;            
+            //now we can calculate score by adding all tiles number those are out of sets--meaning out of any groups/runs
+            int score = 0;
+            for (int i = 0; i < tempTileList.Count; i++)
+            {
+                score += tempTileList[i].Number;
+            }
+
+            return score;            
         }
-
-        //protected Meld getGreatestMeld(ArrayList<Meld> melds)
-        //{
-        //    if (melds.size() == 0) return null;
-        //    Meld greatestMeld = melds.get(0);
-        //    for (Meld tempMeld : melds)
-        //    {
-        //        if (tempMeld.getValue() > greatestMeld.getValue())
-        //        {
-        //            greatestMeld = tempMeld;
-        //        }
-        //    }
-        //    return greatestMeld;
-        //}
     }
 }
