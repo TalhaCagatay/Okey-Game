@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace TÇI
 {
@@ -47,15 +46,17 @@ namespace TÇI
 
             var jokerCount = playerTiles.Count(tile => tile.IsJoker);
 
+
+
             #region Finding "GROUPS"
 
             {
                 var groups = new HashSet<TileColor>[13]; // can't be 7red + 7red + 7black, need 3 differenct colors, so HashSet
-                for (int i = 1; i < 13; i++) groups[i] = new HashSet<TileColor>();
+                for (int i = 0; i < 13; i++) groups[i] = new HashSet<TileColor>();
 
                 foreach (var tile in playerTiles)
                     if (!tile.IsJoker)
-                        groups[tile.Number - 1].Add(tile.Color);
+                        groups[tile.Number].Add(tile.Color);
 
                 for (int i = 12; i >= 0; i--) // for in reverse to sort less leter. this way groups of 13 would be before groups of 1, and we need this to spend 13's first
                     if (groups[i].Count >= 3)
@@ -63,7 +64,7 @@ namespace TÇI
                             groups[i].Select(color => new TileModel(i + 1, color, false)).ToList(),
                             0
                         ));
-                    else if (groups[i].Count >= 1) // can 2 jokers be used in 1 run/group? if not - we need "==2" here
+                    else if (groups[i].Count + jokerCount >= 3) // can 2 jokers be used in 1 set?
                         allSets.Add(new TileSet(
                             groups[i].Select(color => new TileModel(i + 1, color, false)).ToList(),
                             3 - groups[i].Count
@@ -81,7 +82,7 @@ namespace TÇI
 
                 foreach (var tile in playerTiles)
                     if (!tile.IsJoker)
-                        coloredTiles[tile.Color][tile.Number - 1] += 1;
+                        coloredTiles[tile.Color][tile.Number] += 1;
 
                 foreach (var color in coloredTiles.Keys)
                 {
@@ -92,6 +93,7 @@ namespace TÇI
 
                     for (int i = 12; i >= 0; i--)
                     {
+
                         if (currTiles[i] != 0)
                         {
                             if (mainRunStart == -1) mainRunStart = i;
@@ -110,7 +112,7 @@ namespace TÇI
                                     mainRunStart = i;
                                 }
 
-                                for (var jri = 0; i < jokerRuns.Count; i++)
+                                for (var jri = 0; jri < jokerRuns.Count; jri++)
                                     if (jokerRuns[jri].runEnd == -1)
                                         if (i < jokerRuns[jri].runStart - 1)
                                             jokerRuns[jri].runEnd = i;
@@ -123,10 +125,29 @@ namespace TÇI
 
                             if (mainRunStart != -1)
                             {
+                                if (jokerCount != 0)
                                 {
+
                                     var jokerRun = new JokerRunData(mainRunStart);
                                     jokerRun.jokersUsed.Add(i);
                                     jokerRuns.Add(jokerRun);
+
+                                    if (i < 12)
+                                    {
+                                        jokerRun = new JokerRunData(mainRunStart + 1);
+                                        jokerRun.jokersUsed.Add(jokerRun.runStart);
+                                        jokerRuns.Add(jokerRun);
+
+                                        if ((i < 11) && (jokerCount == 2))
+                                        {
+                                            jokerRun = new JokerRunData(mainRunStart + 2);
+                                            jokerRun.jokersUsed.Add(jokerRun.runStart);
+                                            jokerRun.jokersUsed.Add(jokerRun.runStart - 1);
+                                            jokerRuns.Add(jokerRun);
+                                        }
+
+                                    }
+
                                 }
 
                                 if (i < mainRunStart - 1)
@@ -138,7 +159,7 @@ namespace TÇI
                                 mainRunStart = -1;
                             }
 
-                            for (var jri = 0; i < jokerRuns.Count; i++)
+                            for (var jri = 0; jri < jokerRuns.Count; jri++)
                                 if (jokerRuns[jri].runEnd == -1)
                                 {
                                     if (jokerRuns[jri].jokersUsed.Count < 2)
@@ -149,12 +170,13 @@ namespace TÇI
 
                         }
 
-                        if (i < mainRunStart - 1)
-                            allSets.Add(new TileSet(
-                                Enumerable.Range(0, mainRunStart + 1).Select(num => new TileModel(num + 1, color, false)).ToList(),
-                                0
-                            ));
-                    }                        
+                    }
+
+                    if (0 < mainRunStart - 1)
+                        allSets.Add(new TileSet(
+                            Enumerable.Range(0, mainRunStart + 1).Select(num => new TileModel(num + 1, color, false)).ToList(),
+                            0
+                        ));
 
                     foreach (var jokerRun in jokerRuns)
                     {
@@ -192,20 +214,19 @@ namespace TÇI
             }
 
             var n_playerTiles = playerTiles.ToList();
-            var usedTiles = new HashSet<TileModel>();
 
             while (allSets.Any())
             {
                 var curr = allSets[0];
-                foreach (var tile in curr.tiles) usedTiles.Add(tile);
+                allSets.RemoveAt(0);
+                var inds = curr.tiles.ConvertAll(c_tile => n_playerTiles.FindIndex(tile => (tile.Color == c_tile.Color) && (tile.Number == c_tile.Number)));
+                if (inds.Any(ind => ind == -1)) continue;
+
                 jokerCount -= curr.jokersCount;
 
-                //n_playerTiles.RemoveAll(curr.tiles.Contains); //TODO would only work if TileModel would be struct. otherwise we need:
-                n_playerTiles.RemoveAll(tile => curr.tiles.Any(c_tile => (tile.Color == c_tile.Color) && (tile.Number == c_tile.Number)));
+                foreach (var ind in inds.OrderByDescending(ind => ind))
+                    n_playerTiles.RemoveAt(ind);
 
-                //TODO and same again:
-                //allSets.RemoveAll(ts=> (ts.jokersCount>jokerCount) || ts.tiles.Any(curr.tiles.Contains) );
-                allSets.RemoveAll(ts => (ts.jokersCount > jokerCount) || ts.tiles.Any(tile => curr.tiles.Any(c_tile => (tile.Color == c_tile.Color) && (tile.Number == c_tile.Number))));
             }
 
             return n_playerTiles.Sum(tile => tile.Number) + jokerCount * 30;
